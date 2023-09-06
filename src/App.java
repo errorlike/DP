@@ -14,22 +14,22 @@ public class App {
      */
     public static void main(String[] args) throws Exception {
         long beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        System.out.println(climbStairs(1000000));
+        System.out.println(climbStairs(5, 2));
         long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         System.out.println((afterUsedMem - beforeUsedMem) / 1024 / 1024 + "MB");
     }
 
-    public static long climbStairs(int n) {
-        // long[] cache = new long[n + 1];
-        // cache[0] = 1;
-        long[] cache = new long[2];
+    public static long climbStairs(int n, int k) {
+        long[] cache = new long[n + 1];
         cache[0] = 1;
         cache[1] = 1;
         for (int i = 2; i < n + 1; i++) {
-            // cache[i] = cache[i - 1] + cache[i - 2];
-            cache[i % 2] = cache[0] + cache[1];
+            for (int j = 1; j <= k; j++) {
+                if (i - j < 0)
+                    continue;
+                cache[i] += cache[i - j];
+            }
         }
-        // return cache[n];
-        return cache[n % 2];
+        return cache[n];
     }
 }
