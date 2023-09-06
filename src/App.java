@@ -13,24 +13,23 @@ public class App {
      * f(n)
      */
     public static void main(String[] args) throws Exception {
-        System.out.println(climbStairs(0));
-        System.out.println(climbStairs(1));
-        System.out.println(climbStairs(3));
-        System.out.println(climbStairs(5));
-        System.out.println(climbStairs(6));
-        System.out.println(climbStairs(10));
-
+        long beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        System.out.println(climbStairs(1000000));
+        long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        System.out.println((afterUsedMem - beforeUsedMem) / 1024 / 1024 + "MB");
     }
 
-    public static int climbStairs(int n) {
-        int[] cache = new int[n + 1];
+    public static long climbStairs(int n) {
+        // long[] cache = new long[n + 1];
+        // cache[0] = 1;
+        long[] cache = new long[2];
         cache[0] = 1;
-        if (n >= 1) {
-            cache[1] = 1;
-            for (int i = 2; i < n + 1; i++) {
-                cache[i] = cache[i - 1] + cache[i - 2];
-            }
+        cache[1] = 1;
+        for (int i = 2; i < n + 1; i++) {
+            // cache[i] = cache[i - 1] + cache[i - 2];
+            cache[i % 2] = cache[0] + cache[1];
         }
-        return cache[n];
+        // return cache[n];
+        return cache[n % 2];
     }
 }
