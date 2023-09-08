@@ -26,7 +26,7 @@ public class App {
             for (int j = 1; j < k; j++) {
                 if (i - j < 0)
                     continue;
-                cache[n % k] += cache[(i - j) % k];
+                cache[i % k] += cache[(i - j) % k];
             }
         }
         return cache[n % k];
