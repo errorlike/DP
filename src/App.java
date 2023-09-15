@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +10,7 @@ public class App {
      * 2.确定基本情况（边界条件）
      * f(0) = 0
      * f(1) = 3
-     * f(2) = 2
+     * 
      * f(3) = 6
      * 3.递推关系
      * 3.f(n) = p(n) + min(f(n-1),f(n-2))
