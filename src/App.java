@@ -1,26 +1,85 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class App {
-    // f(i,j) = f(i-1,1-j)+f(i-2,1-j)
-    // f(n,0)+f(n,1);
-    // 0 1 00 10 01 11
-    // 建模方式变成：i个fences的最后一个颜色为j时有多少种涂法,子问题为 i-1个fences的颜色，末尾颜色为1-j的时的涂法 +
-    // i-2个fence末尾颜色为1-j的时候（此时最后两个同色）
     public static void main(String[] args) {
-        System.out.println(painted(3));
-        System.out.println(painted(4));
-        System.out.println(painted(5));
+        // System.out.println(fib(0));
+        // System.out.println(fib(1));
+        // System.out.println(fib(2));
+        // System.out.println(fib(10));
+        // System.out.println(fibTopToDown(0));
+        // System.out.println(fibTopToDown(1));
+        // System.out.println(fibTopToDown(2));
+        // System.out.println(fibTopToDown(3));
+        // System.out.println(fibTopToDown(10));
+        // System.out.println(fibBottomUpDPForward(0));
+        // System.out.println(fibBottomUpDPForward(1));
+        // System.out.println(fibBottomUpDPForward(2));
+        // System.out.println(fibBottomUpDPForward(3));
+        // System.out.println(fibBottomUpDPForward(10));
+        System.out.println(fibBottomUpDPBackword(0));
+        System.out.println(fibBottomUpDPBackword(1));
+        System.out.println(fibBottomUpDPBackword(2));
+        System.out.println(fibBottomUpDPBackword(3));
+        System.out.println(fibBottomUpDPBackword(10));
     }
 
-    public static int painted(int n) {
-        int[][] cache = new int[n + 1][2];
-        cache[1][0] = 1;
-        cache[1][1] = 1;
-        cache[2][0] = 2;
-        cache[2][1] = 2;
-        for (int i = 3; i <= n; i++) {
-            for (int j = 0; j < 2; j++) {
-                cache[i][j] = cache[i - 1][1 - j] + cache[i - 2][1 - j];
-            }
+    public static int fib(int n) {
+        if (n == 0) {
+            return 0;
         }
-        return cache[n][0] + cache[n][1];
+        if (n <= 2) {
+            return 1;
+        }
+        return fib(n - 1) + fib(n - 2);
     }
+
+    public static int fibTopToDown(int n) {
+
+        Map<Integer, Integer> memo = new HashMap<>();
+        return fibTopDownHelper(n, memo);
+
+    }
+
+    public static int fibTopDownHelper(int n, Map<Integer, Integer> memo) {
+        if (n == 0) {
+            return 0;
+        }
+        if (n <= 2) {
+            return 1;
+        }
+        if (memo.get(n) != null) {
+            return memo.get(n);
+        }
+        memo.put(n, fibTopDownHelper(n - 1, memo) + fibTopDownHelper(n - 2, memo));
+        return memo.get(n);
+
+    }
+
+    public static int fibBottomUpDPForward(int n) {
+        List<Integer> cache = new ArrayList<>();
+        cache.add(0);
+        cache.add(1);
+        for (int i = 2; i <= n; i++) {
+            cache.add(cache.get(i - 1) + cache.get(i - 2));
+        }
+        return cache.get(n);
+    }
+
+    public static int fibBottomUpDPBackword(int n) {
+        List<Integer> cache = new ArrayList<>(n);
+        cache.add(0);
+        cache.add(1);
+        for (int i = 0; i < n; i++) {
+            cache.add(0);
+            cache.set(i + 1, cache.get(i) + cache.get(i + 1));
+            cache.set(i + 2, cache.get(i) + cache.get(i + 2));
+        }
+        System.out.println("size: " + cache.size());
+        return cache.get(n);
+    }
+
 }
+// 0 1 1 2 3 5 8 13 21 34 55
