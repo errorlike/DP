@@ -1,85 +1,37 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+// f(n) = f (n-1) + f(n-3)+f(n-5)+f(n-10)
+//需要记忆 n-面额的值
+//当n>1,3,5,10的时候才需要添加相应的f(n-面额)
+// 该例子中找零的顺序是重要的
 public class App {
+
     public static void main(String[] args) {
-        // System.out.println(fib(0));
-        // System.out.println(fib(1));
-        // System.out.println(fib(2));
-        // System.out.println(fib(10));
-        // System.out.println(fibTopToDown(0));
-        // System.out.println(fibTopToDown(1));
-        // System.out.println(fibTopToDown(2));
-        // System.out.println(fibTopToDown(3));
-        // System.out.println(fibTopToDown(10));
-        // System.out.println(fibBottomUpDPForward(0));
-        // System.out.println(fibBottomUpDPForward(1));
-        // System.out.println(fibBottomUpDPForward(2));
-        // System.out.println(fibBottomUpDPForward(3));
-        // System.out.println(fibBottomUpDPForward(10));
-        System.out.println(fibBottomUpDPBackword(0));
-        System.out.println(fibBottomUpDPBackword(1));
-        System.out.println(fibBottomUpDPBackword(2));
-        System.out.println(fibBottomUpDPBackword(3));
-        System.out.println(fibBottomUpDPBackword(10));
+
+        System.out.println(makeChange(0));
+        System.out.println(makeChange(3));
+        System.out.println(makeChange(4));
+        System.out.println(makeChange(5));
     }
 
-    public static int fib(int n) {
-        if (n == 0) {
-            return 0;
-        }
-        if (n <= 2) {
+    public static int makeChange(int n) {
+        int[] cache = new int[n + 1];
+
+        if (n < 2) {
             return 1;
         }
-        return fib(n - 1) + fib(n - 2);
-    }
+        cache[0] = 1;
+        cache[1] = 1;
+        for (int i = 2; i < n + 1; i++) {
+            if (i < 3) {
+                cache[i] = cache[i - 1];
+            } else if (i < 5) {
+                cache[i] = cache[i - 1] + cache[i - 3];
+            } else if (i < 10) {
+                cache[i] = cache[i - 1] + cache[i - 3] + cache[i - 5];
+            } else {
+                cache[i] = cache[i - 1] + cache[i - 3] + cache[i - 5] + cache[i - 10];
+            }
 
-    public static int fibTopToDown(int n) {
-
-        Map<Integer, Integer> memo = new HashMap<>();
-        return fibTopDownHelper(n, memo);
-
-    }
-
-    public static int fibTopDownHelper(int n, Map<Integer, Integer> memo) {
-        if (n == 0) {
-            return 0;
         }
-        if (n <= 2) {
-            return 1;
-        }
-        if (memo.get(n) != null) {
-            return memo.get(n);
-        }
-        memo.put(n, fibTopDownHelper(n - 1, memo) + fibTopDownHelper(n - 2, memo));
-        return memo.get(n);
-
+        return cache[n];
     }
-
-    public static int fibBottomUpDPForward(int n) {
-        List<Integer> cache = new ArrayList<>();
-        cache.add(0);
-        cache.add(1);
-        for (int i = 2; i <= n; i++) {
-            cache.add(cache.get(i - 1) + cache.get(i - 2));
-        }
-        return cache.get(n);
-    }
-
-    public static int fibBottomUpDPBackword(int n) {
-        List<Integer> cache = new ArrayList<>(n);
-        cache.add(0);
-        cache.add(1);
-        for (int i = 0; i < n; i++) {
-            cache.add(0);
-            cache.set(i + 1, cache.get(i) + cache.get(i + 1));
-            cache.set(i + 2, cache.get(i) + cache.get(i + 2));
-        }
-        System.out.println("size: " + cache.size());
-        return cache.get(n);
-    }
-
 }
-// 0 1 1 2 3 5 8 13 21 34 55
