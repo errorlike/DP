@@ -6,32 +6,33 @@ public class App {
 
     public static void main(String[] args) {
 
-        System.out.println(makeChange(0));
-        System.out.println(makeChange(3));
-        System.out.println(makeChange(4));
-        System.out.println(makeChange(5));
+        System.out.println(makeChange(0, 1));
+        System.out.println(makeChange(7, 3));
     }
 
-    public static int makeChange(int n) {
-        int[] cache = new int[n + 1];
-
-        if (n < 2) {
-            return 1;
-        }
-        cache[0] = 1;
-        cache[1] = 1;
-        for (int i = 2; i < n + 1; i++) {
-            if (i < 3) {
-                cache[i] = cache[i - 1];
-            } else if (i < 5) {
-                cache[i] = cache[i - 1] + cache[i - 3];
-            } else if (i < 10) {
-                cache[i] = cache[i - 1] + cache[i - 3] + cache[i - 5];
-            } else {
-                cache[i] = cache[i - 1] + cache[i - 3] + cache[i - 5] + cache[i - 10];
+    public static int makeChange(int n, int limit) {
+        int[][] cache = new int[n + 1][limit + 1];
+        cache[0][0] = 1;
+        for (int i = 0; i < cache.length; i++) {
+            for (int j = 0; j < limit + 1; j++) {
+                if (i > 0 && j == 0) {
+                    continue;
+                }
+                if (i >= 1) {
+                    cache[i][j] += cache[i - 1][j - 1];
+                }
+                if (i >= 2) {
+                    cache[i][j] += cache[i - 2][j - 1];
+                }
+                if (i >= 3) {
+                    cache[i][j] += cache[i - 3][j - 1];
+                }
+                if (i >= 5) {
+                    cache[i][j] += cache[i - 5][j - 1];
+                }
             }
-
         }
-        return cache[n];
+
+        return cache[n][limit];
     }
 }
