@@ -18,6 +18,10 @@ public class App {
                 if (i > 0 && j == 0) {
                     continue;
                 }
+                if (i == 0 && j > 0) {
+                    cache[i][j] = 1;
+                    continue;
+                }
                 if (i >= 1) {
                     cache[i][j] += cache[i - 1][j - 1];
                 }
