@@ -1,42 +1,31 @@
-// f(n) = f (n-1) + f(n-3)+f(n-5)+f(n-10)
-//需要记忆 n-面额的值
-//当n>1,3,5,10的时候才需要添加相应的f(n-面额)
 // 该例子中找零的顺序是重要的
+// x = 1 even number
+// x = 0 odd number
+// f(i,x) x表示奇数或者偶数的情况
+// f(0,1) = 0 f(1,1) = 0
+//f(i,1) = f(i-1,0)+f(i-3,0)+...
 public class App {
 
     public static void main(String[] args) {
 
-        System.out.println(makeChange(0, 1));
-        System.out.println(makeChange(7, 3));
+        System.out.println(makeChange(4, 0, new int[] { 1, 3, 5, 10 }));
+        System.out.println(makeChange(6, 0, new int[] { 1, 3, 5, 10 }));
+        System.out.println(makeChange(5, 1, new int[] { 1, 3, 5, 10 }));
     }
 
-    public static int makeChange(int n, int limit) {
-        int[][] cache = new int[n + 1][limit + 1];
+    public static int makeChange(int n, int x, int[] coins) {
+        int[][] cache = new int[n + 1][2];
         cache[0][0] = 1;
-        for (int i = 0; i < cache.length; i++) {
-            for (int j = 0; j < limit + 1; j++) {
-                if (i > 0 && j == 0) {
+        cache[0][1] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (i < coins[j]) {
                     continue;
                 }
-                if (i == 0 && j > 0) {
-                    cache[i][j] = 1;
-                    continue;
-                }
-                if (i >= 1) {
-                    cache[i][j] += cache[i - 1][j - 1];
-                }
-                if (i >= 2) {
-                    cache[i][j] += cache[i - 2][j - 1];
-                }
-                if (i >= 3) {
-                    cache[i][j] += cache[i - 3][j - 1];
-                }
-                if (i >= 5) {
-                    cache[i][j] += cache[i - 5][j - 1];
-                }
+                cache[i][0] += cache[i - coins[j]][1];
+                cache[i][1] += cache[i - coins[j]][0];
             }
         }
-
-        return cache[n][limit];
+        return cache[n][x];
     }
 }
