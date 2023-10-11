@@ -1,31 +1,29 @@
-// 该例子中找零的顺序是重要的
-// x = 1 even number
-// x = 0 odd number
-// f(i,x) x表示奇数或者偶数的情况
-// f(0,1) = 0 f(1,1) = 0
-//f(i,1) = f(i-1,0)+f(i-3,0)+...
 public class App {
 
     public static void main(String[] args) {
 
-        System.out.println(makeChange(4, 0, new int[] { 1, 3, 5, 10 }));
-        System.out.println(makeChange(6, 0, new int[] { 1, 3, 5, 10 }));
-        System.out.println(makeChange(5, 1, new int[] { 1, 3, 5, 10 }));
+        System.out.println(makeChange(8, new int[] { 1, 2, 3, 5 }));
+        System.out.println(makeChange(75, new int[] { 1, 2, 3, 5 }));
     }
 
-    public static int makeChange(int n, int x, int[] coins) {
-        int[][] cache = new int[n + 1][2];
-        cache[0][0] = 1;
-        cache[0][1] = 0;
-        for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < coins.length; j++) {
-                if (i < coins[j]) {
-                    continue;
+    public static int makeChange(int n, int[] coins) {
+        int column = coins.length;
+        int[][] cache = new int[n + 1][column];
+        for (int i = 0; i < column; i++) {
+            cache[0][i] = 1;
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < column; j++) {
+                for (int k = 0; k <= j; k++) {
+                    if (i < coins[k]) {
+                        // f(3,3) = f(3,5)
+                        // 如果coins是升序的话可以使用break，如果乱序就使用continue.
+                        break;
+                    }
+                    cache[i][j] += cache[i - coins[k]][k];
                 }
-                cache[i][0] += cache[i - coins[j]][1];
-                cache[i][1] += cache[i - coins[j]][0];
             }
         }
-        return cache[n][x];
+        return cache[n][column - 1];
     }
 }
